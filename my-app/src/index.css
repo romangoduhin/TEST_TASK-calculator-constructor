@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer components {
+    .flex-centred {
+        @apply flex justify-center items-center
+    }
+
     .custom-btn {
         @apply flex justify-center items-center border border-solid border-border-color rounded-[6px] font-medium text-[14px] leading-[15px] cursor-pointer;
     }
@@ -21,5 +25,9 @@
 
     .big-btn {
         @apply w-[152px] h-[48px]
+    }
+
+    .large-btn {
+        @apply w-[232px] h-[64px]
     }
 }

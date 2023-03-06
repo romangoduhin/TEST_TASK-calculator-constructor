@@ -6,7 +6,7 @@ function Operators() {
 
   return (
     <div className="w-[240px] h-[56px] custom-block">
-      {operators.map((el) => (<Button key={el} styles="medium-btn">{el}</Button>))}
+      {operators.map((el) => (<Button key={el} styles="small-btn">{el}</Button>))}
     </div>
   );
 }
