@@ -1,9 +1,9 @@
 import React from 'react';
 import { ButtonProps } from './Button.types';
 
-function Button({ children }: ButtonProps) {
+function Button({ children, styles = 'small-btn' }: ButtonProps) {
   return (
-    <div className="w-[52px] h-[48px] custom-btn">
+    <div className={`${styles} custom-btn`}>
       {children}
     </div>
   );
