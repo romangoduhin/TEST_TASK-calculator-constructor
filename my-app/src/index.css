@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .custom-btn {
+        @apply flex justify-center items-center border border-solid border-border-color rounded-[6px] font-medium text-[14px] leading-[15px] cursor-pointer;
+    }
+
+    .custom-block {
+        @apply p-[4px] flex flex-row justify-evenly items-center  rounded-[4px] bg-white shadow-custom;
+    }
+}
