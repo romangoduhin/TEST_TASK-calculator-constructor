@@ -1,0 +1,11 @@
+.display {
+  @apply w-[240px] h-[60px] custom-block;
+
+  div {
+    @apply w-full h-full rounded-[4px] bg-light-grey;
+    p {
+      @apply px-[8px] py-[4px] w-full h-full flex justify-end items-center font-extrabold text-4xl;
+    }
+  }
+}
+

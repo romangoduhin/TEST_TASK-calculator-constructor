@@ -1,0 +1,9 @@
+.main {
+  @apply w-screen h-screen flex-centred bg-orange-200;
+
+  .content {
+    @apply w-[695px] h-[640px] flex flex-row bg-red-200;
+  }
+}
+
+

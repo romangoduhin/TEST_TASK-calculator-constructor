@@ -3,10 +3,11 @@ import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
 import EqualButton from './EqualButton/EqualButton';
+import styles from './Palette.module.scss';
 
 function Palette() {
   return (
-    <div className="w-1/2 h-full flex-centred flex-col gap-[12px] bg-white">
+    <div className={styles.palette}>
       <Display />
       <Operators />
       <Numbers />
