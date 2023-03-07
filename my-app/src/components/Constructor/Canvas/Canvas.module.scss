@@ -1,4 +1,4 @@
-.canvas {
+.emptyCanvas {
   @apply w-[243px] h-[448px] rounded-[6px] flex-centred flex-col gap-[12px] bordered-dashed bg-white cursor-pointer hover:bg-light-blue;
 
   .text {
@@ -8,4 +8,8 @@
       @apply text-[12px] leading-[15px] text-grey font-normal text-center;
     }
   }
+}
+
+.filledCanvas {
+  @apply w-full h-full flex-centred flex-col gap-[12px] bg-red-200;
 }

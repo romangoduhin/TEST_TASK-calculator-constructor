@@ -3,7 +3,7 @@ import styles from './EqualButton.module.scss';
 
 function EqualButton() {
   return (
-    <div draggable className={styles.equalButton}>
+    <div className={styles.equalButton}>
       <div>
         =
       </div>

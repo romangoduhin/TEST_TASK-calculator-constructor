@@ -3,7 +3,7 @@ import styles from './Display.module.scss';
 
 function Display() {
   return (
-    <div draggable className={styles.display}>
+    <div className={styles.display}>
       <div>
         <p>0</p>
       </div>
