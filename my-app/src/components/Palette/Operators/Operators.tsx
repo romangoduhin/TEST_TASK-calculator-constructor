@@ -6,7 +6,7 @@ function Operators() {
   const operators = ['/', 'x', '-', '+'];
 
   return (
-    <div className={styles.operatorsBlock}>
+    <div draggable className={styles.operatorsBlock}>
       {operators.map((el) => (<Button key={el} styles="small-btn">{el}</Button>))}
     </div>
   );

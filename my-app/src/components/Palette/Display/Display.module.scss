@@ -1,5 +1,5 @@
 .display {
-  @apply w-[240px] h-[60px] custom-block;
+  @apply w-[240px] h-[60px] custom-block cursor-pointer;
 
   div {
     @apply w-full h-full rounded-[4px] bg-light-grey;
