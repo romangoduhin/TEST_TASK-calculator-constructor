@@ -6,7 +6,7 @@ import { IComponents, IProps } from './Palette.types';
 import { parse, stringify } from '../../helpers/jsonMethods';
 import { useAppDispatch } from '../../store/hooks';
 import {
-  removeItem, enableItem, setCurrentItem, swipeItem, setSwipedItem,
+  removeItem, enableItem, setCurrentItem, swipeItem, setSwipedItem, setCurrentBoard,
 } from '../../store/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
@@ -32,14 +32,18 @@ function Palette({ items, board, disabledItems }: IProps) {
 
   function handleDragStart(data: string) {
     const parsedData = parse(data);
-
-    dispatch(setCurrentItem(parsedData));
+    if (parsedData) {
+      dispatch(setCurrentItem(parsedData));
+    }
   }
 
   function handleDragEnter(data: string) {
     const parsedData = parse(data);
 
-    dispatch(setSwipedItem(parsedData));
+    if (board && parsedData) {
+      dispatch(setSwipedItem(parsedData));
+      dispatch(setCurrentBoard(board));
+    }
   }
 
   function handleDragEnd() {

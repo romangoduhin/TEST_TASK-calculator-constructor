@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { InitialState, Item } from '../types';
+import { InitialState, Item, Board } from '../types';
 import elementSwapper from '../../helpers/elementSwapper';
 
 const initialState: InitialState = {
@@ -23,6 +23,7 @@ const initialState: InitialState = {
     }],
   disabledItems: [],
   currentItem: null,
+  currentBoard: null,
   swipedItem: null,
 };
 
@@ -78,15 +79,20 @@ export const boardsSlice = createSlice({
 
       state.currentItem = item;
     },
+    setCurrentBoard: (state, action: PayloadAction<Board>) => {
+      const board = action.payload;
+
+      state.currentBoard = board;
+    },
     setSwipedItem: (state, action: PayloadAction<Item>) => {
       const item = action.payload;
 
       state.swipedItem = item;
     },
     swipeItem: (state) => {
-      const { currentItem, swipedItem } = state;
+      const { currentItem, swipedItem, currentBoard } = state;
 
-      if (currentItem && swipedItem) {
+      if (currentItem && swipedItem && currentBoard && currentBoard.id === 2) {
         state.boards = state.boards.map((board) => {
           if (board.id === 2) {
             const newBoard = { ...board };
@@ -94,7 +100,12 @@ export const boardsSlice = createSlice({
             const swipedItemIndex = board.items.findIndex((i) => i.id === swipedItem.id);
             const currentItemIndex = board.items.findIndex((i) => i.id === currentItem.id);
 
-            elementSwapper(newBoard.items, swipedItemIndex, currentItemIndex);
+            const isIndexesCorrect = (swipedItemIndex >= 0 && currentItemIndex >= 0);
+            const isIndexesEqual = swipedItemIndex === currentItemIndex;
+
+            if (!isIndexesEqual && isIndexesCorrect) {
+              elementSwapper(newBoard.items, swipedItemIndex, currentItemIndex);
+            }
 
             return newBoard;
           }
@@ -106,6 +117,13 @@ export const boardsSlice = createSlice({
 });
 
 export const {
-  setItem, removeItem, disableItem, enableItem, setCurrentItem, setSwipedItem, swipeItem,
+  setItem,
+  removeItem,
+  disableItem,
+  enableItem,
+  setCurrentItem,
+  setSwipedItem,
+  swipeItem,
+  setCurrentBoard,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

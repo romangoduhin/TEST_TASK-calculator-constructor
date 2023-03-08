@@ -16,8 +16,11 @@ function Canvas({ items, board }: IProps) {
 
   function handleDrop(data: string) {
     const parsedData = parse(data);
-    dispatch(setItem({ boardId: 2, item: parsedData }));
-    dispatch(disableItem(parsedData.id));
+
+    if (parsedData) {
+      dispatch(setItem({ boardId: 2, item: parsedData }));
+      dispatch(disableItem(parsedData.id));
+    }
   }
 
   useEffect(() => {
