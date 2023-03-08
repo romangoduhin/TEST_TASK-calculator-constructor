@@ -13,6 +13,7 @@ function Canvas({ items, board }: IProps) {
   const dispatch = useAppDispatch();
 
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   function handleDrop(data: string) {
     const parsedData = parse(data);
@@ -36,9 +37,11 @@ function Canvas({ items, board }: IProps) {
       types="item"
       className={isEmpty ? styles.droppableAreaCanvas : styles.droppableAreaPalette}
       onDrop={(data: { item: string }) => handleDrop(data.item)}
+      onDragOver={() => setIsHovered(true)}
+      onDragLeave={() => setIsHovered(false)}
     >
       {isEmpty ? (
-        <div className={styles.emptyCanvas}>
+        <div className={isHovered ? `${styles.emptyCanvas} ${styles.hovered}` : styles.emptyCanvas}>
           <img src={AddIconSvg} alt="add-icon" />
           <p className={styles.text}>
             Перетащите сюда
