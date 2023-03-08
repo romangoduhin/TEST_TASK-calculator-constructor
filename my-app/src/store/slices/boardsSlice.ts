@@ -27,40 +27,52 @@ export const boardsSlice = createSlice({
   initialState,
   reducers: {
     setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => {
+      const { boardId, item } = action.payload;
+
       // eslint-disable-next-line no-param-reassign
       state.boards = state.boards.map((board) => {
-        if (board.id === action.payload.boardId) {
+        const isDesiredBoard = board.id === boardId;
+        const isBoardExistItem = board.items.some((i) => i.id === item.id);
+
+        if (isDesiredBoard && !isBoardExistItem) {
           const newBoard = { ...board };
-          const newItems: Array<Item> = newBoard.items;
-          newItems.push(action.payload.item);
+          newBoard.items = [...newBoard.items, item];
           return newBoard;
         }
         return board;
       });
     },
     removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => {
+      const { boardId, itemId } = action.payload;
+
       // eslint-disable-next-line no-param-reassign
       state.boards = state.boards.map((board) => {
-        if (board.id === action.payload.boardId) {
+        const isDesiredBoard = board.id === boardId;
+
+        if (isDesiredBoard) {
           const newBoard = { ...board };
-          newBoard.items = newBoard.items.filter((item) => item.id !== action.payload.itemId);
+          newBoard.items = newBoard.items.filter((item) => item.id !== itemId);
           return newBoard;
         }
         return board;
       });
     },
-    disableItem: (state, action: PayloadAction< number >) => {
+    disableItem: (state, action: PayloadAction<number>) => {
+      const itemId = action.payload;
+
       // eslint-disable-next-line no-param-reassign
-      state.disabledItems = [...state.disabledItems, action.payload];
+      state.disabledItems = [...state.disabledItems, itemId];
     },
-    undisableItem: (state, action: PayloadAction< number >) => {
+    enableItem: (state, action: PayloadAction<number>) => {
+      const itemId = action.payload;
+
       // eslint-disable-next-line no-param-reassign
-      state.disabledItems = state.disabledItems.filter((id) => id !== action.payload);
+      state.disabledItems = state.disabledItems.filter((id) => id !== itemId);
     },
   },
 });
 
 export const {
-  setItem, removeItem, disableItem, undisableItem,
+  setItem, removeItem, disableItem, enableItem,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

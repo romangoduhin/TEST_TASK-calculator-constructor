@@ -5,7 +5,7 @@ import styles from './Palette.module.scss';
 import { IComponents, IProps } from './Palette.types';
 import { stringify } from '../../helpers/jsonMethods';
 import { useAppDispatch } from '../../store/hooks';
-import { removeItem, undisableItem } from '../../store/slices/boardsSlice';
+import { removeItem, enableItem } from '../../store/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
@@ -24,7 +24,7 @@ function Palette({ items, board, disabledItems }: IProps) {
   function handleDoubleClick(itemId: number, boardId: number) {
     if (boardId === 2) {
       dispatch(removeItem({ boardId, itemId }));
-      dispatch(undisableItem(itemId));
+      dispatch(enableItem(itemId));
     }
   }
 
@@ -32,9 +32,11 @@ function Palette({ items, board, disabledItems }: IProps) {
     <div className={styles.palette}>
       {items.map((item) => {
         const data = stringify(item);
+        const isDisabled = disabledItems && disabledItems.includes(item.id);
+
         return (
           <Draggable
-            className={`${(disabledItems && disabledItems.includes(item.id)) ? styles.draggableDisabled : styles.draggable}`}
+            className={`${isDisabled ? styles.draggableDisabled : styles.draggable}`}
             key={item.id}
             type="item"
             data={data}
