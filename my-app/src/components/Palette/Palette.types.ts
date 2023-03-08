@@ -3,7 +3,8 @@ import { Board, Items } from '../../store/types';
 
 export interface IProps {
   items: Items,
-  board: Board
+  board: Board,
+  disabledItems?: Array<number>
 }
 
 export interface IComponents {

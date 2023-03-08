@@ -10,4 +10,5 @@ export interface Board {
 
 export interface InitialState {
   boards: Array<Board>;
+  disabledItems: Array<number>
 }

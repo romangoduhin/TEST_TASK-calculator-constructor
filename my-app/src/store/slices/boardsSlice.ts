@@ -19,6 +19,7 @@ const initialState: InitialState = {
       name: 'constructor',
       items: [],
     }],
+  disabledItems: [],
 };
 
 export const boardsSlice = createSlice({
@@ -30,7 +31,7 @@ export const boardsSlice = createSlice({
       state.boards = state.boards.map((board) => {
         if (board.id === action.payload.boardId) {
           const newBoard = { ...board };
-          const newItems : Array<Item> = newBoard.items;
+          const newItems: Array<Item> = newBoard.items;
           newItems.push(action.payload.item);
           return newBoard;
         }
@@ -48,8 +49,18 @@ export const boardsSlice = createSlice({
         return board;
       });
     },
+    disableItem: (state, action: PayloadAction< number >) => {
+      // eslint-disable-next-line no-param-reassign
+      state.disabledItems = [...state.disabledItems, action.payload];
+    },
+    undisableItem: (state, action: PayloadAction< number >) => {
+      // eslint-disable-next-line no-param-reassign
+      state.disabledItems = state.disabledItems.filter((id) => id !== action.payload);
+    },
   },
 });
 
-export const { setItem, removeItem } = boardsSlice.actions;
+export const {
+  setItem, removeItem, disableItem, undisableItem,
+} = boardsSlice.actions;
 export default boardsSlice.reducer;

@@ -5,7 +5,7 @@ import AddIconSvg from '../../../assets/addIcon.svg';
 import styles from './Canvas.module.scss';
 import { IProps } from './Canvas.types';
 import { useAppDispatch } from '../../../store/hooks';
-import { setItem } from '../../../store/slices/boardsSlice';
+import { disableItem, setItem } from '../../../store/slices/boardsSlice';
 import { parse } from '../../../helpers/jsonMethods';
 import Palette from '../../Palette/Palette';
 
@@ -17,6 +17,7 @@ function Canvas({ items, board }: IProps) {
   function handleDrop(data: string) {
     const parsedData = parse(data);
     dispatch(setItem({ boardId: 2, item: parsedData }));
+    dispatch(disableItem(parsedData.id));
   }
 
   useEffect(() => {

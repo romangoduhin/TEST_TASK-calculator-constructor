@@ -5,7 +5,7 @@ import Constructor from './components/Constructor/Constructor';
 import { useAppSelector } from './store/hooks';
 
 function App() {
-  const { boards } = useAppSelector((state) => state.boards);
+  const { boards, disabledItems } = useAppSelector((state) => state.boards);
 
   return (
     <div className={styles.main}>
@@ -13,7 +13,7 @@ function App() {
         {boards.map((board) => (
           <div className={styles.side} key={board.id}>
             {(board.name === 'palette')
-              ? <Palette items={board.items} board={board} />
+              ? <Palette items={board.items} board={board} disabledItems={disabledItems} />
               : <Constructor items={board.items} board={board} />}
           </div>
         ))}

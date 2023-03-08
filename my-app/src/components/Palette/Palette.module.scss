@@ -1,3 +1,11 @@
 .palette {
   @apply w-full h-[448px] flex flex-col justify-start items-center gap-[12px] bg-white;
+
+  .draggable {
+    @apply pointer-events-auto cursor-pointer;
+  }
+
+  .draggableDisabled {
+    @apply pointer-events-none opacity-30;
+  }
 }
