@@ -1,8 +1,9 @@
 import React from 'react';
-import { Items } from '../../store/types';
+import { Board, Items } from '../../store/types';
 
 export interface IProps {
   items: Items,
+  board: Board
 }
 
 export interface IComponents {

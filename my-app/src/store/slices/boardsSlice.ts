@@ -37,8 +37,19 @@ export const boardsSlice = createSlice({
         return board;
       });
     },
+    removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => {
+      // eslint-disable-next-line no-param-reassign
+      state.boards = state.boards.map((board) => {
+        if (board.id === action.payload.boardId) {
+          const newBoard = { ...board };
+          newBoard.items = newBoard.items.filter((item) => item.id !== action.payload.itemId);
+          return newBoard;
+        }
+        return board;
+      });
+    },
   },
 });
 
-export const { setItem } = boardsSlice.actions;
+export const { setItem, removeItem } = boardsSlice.actions;
 export default boardsSlice.reducer;

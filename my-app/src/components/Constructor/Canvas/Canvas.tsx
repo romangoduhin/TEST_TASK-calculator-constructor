@@ -9,7 +9,7 @@ import { setItem } from '../../../store/slices/boardsSlice';
 import { parse } from '../../../helpers/jsonMethods';
 import Palette from '../../Palette/Palette';
 
-function Canvas({ items }: IProps) {
+function Canvas({ items, board }: IProps) {
   const dispatch = useAppDispatch();
 
   const [isEmpty, setIsEmpty] = useState(false);
@@ -46,7 +46,7 @@ function Canvas({ items }: IProps) {
           </p>
         </div>
       ) : (
-        <Palette items={items} />
+        <Palette items={items} board={board} />
       )}
     </Droppable>
   );
