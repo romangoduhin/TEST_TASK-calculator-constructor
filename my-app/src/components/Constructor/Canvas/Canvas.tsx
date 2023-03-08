@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
+// @ts-ignore
+import { Droppable } from 'react-drag-and-drop';
 import AddIconSvg from '../../../assets/addIcon.svg';
 import styles from './Canvas.module.scss';
 import { IProps } from './Canvas.types';
+import { useAppDispatch } from '../../../store/hooks';
+import { setItem } from '../../../store/slices/boardsSlice';
+import { parse } from '../../../helpers/jsonMethods';
+import Palette from '../../Palette/Palette';
 
 function Canvas({ items }: IProps) {
-  const [isEmpty, setIsEmpty] = useState(true);
+  const dispatch = useAppDispatch();
+
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  function handleDrop(data: string) {
+    const parsedData = parse(data);
+    dispatch(setItem({ boardId: 2, item: parsedData }));
+  }
 
   useEffect(() => {
     if (items.length) {
@@ -14,22 +27,29 @@ function Canvas({ items }: IProps) {
     setIsEmpty(true);
   }, [items]);
 
-  return isEmpty ? (
-    <div className={styles.emptyCanvas}>
-      <img src={AddIconSvg} alt="add-icon" />
-      <p className={styles.text}>
-        Перетащите сюда
-        <span>
-          любой элемент
-          <br />
-          из левой панели
-        </span>
-      </p>
-    </div>
-  )
-    : (
-      <div className={styles.filledCanvas} />
-    );
+  return (
+    <Droppable
+      types="item"
+      className={isEmpty ? styles.droppableAreaCanvas : styles.droppableAreaPalette}
+      onDrop={(data: { item: string }) => handleDrop(data.item)}
+    >
+      {isEmpty ? (
+        <div className={styles.emptyCanvas}>
+          <img src={AddIconSvg} alt="add-icon" />
+          <p className={styles.text}>
+            Перетащите сюда
+            <span>
+              любой элемент
+              <br />
+              из левой панели
+            </span>
+          </p>
+        </div>
+      ) : (
+        <Palette items={items} />
+      )}
+    </Droppable>
+  );
 }
 
 export default Canvas;

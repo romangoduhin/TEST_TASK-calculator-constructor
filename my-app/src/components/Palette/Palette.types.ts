@@ -2,7 +2,7 @@ import React from 'react';
 import { Items } from '../../store/types';
 
 export interface IProps {
-  items : Items
+  items: Items,
 }
 
 export interface IComponents {

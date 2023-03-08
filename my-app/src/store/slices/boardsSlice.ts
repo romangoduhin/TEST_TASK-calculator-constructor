@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { InitialState } from '../types';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { InitialState, Item } from '../types';
 
 const initialState: InitialState = {
   boards: [
@@ -24,14 +25,20 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    // setUser: (state, action: PayloadAction<User>) => {
-    //     state.email = action.payload.email;
-    // },
-    // removeUser: (state) => {
-    //     state.email = null;
-    // }
+    setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => {
+      // eslint-disable-next-line no-param-reassign
+      state.boards = state.boards.map((board) => {
+        if (board.id === action.payload.boardId) {
+          const newBoard = { ...board };
+          const newItems : Array<Item> = newBoard.items;
+          newItems.push(action.payload.item);
+          return newBoard;
+        }
+        return board;
+      });
+    },
   },
 });
 
-// export const {} = boardsSlice.actions;
+export const { setItem } = boardsSlice.actions;
 export default boardsSlice.reducer;

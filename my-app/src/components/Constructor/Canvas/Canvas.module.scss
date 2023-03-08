@@ -1,3 +1,11 @@
+.droppableAreaCanvas {
+  @apply w-auto h-[448px] flex justify-center bg-white;
+}
+
+.droppableAreaPalette {
+  @apply w-full h-full flex justify-center bg-white;
+}
+
 .emptyCanvas {
   @apply w-[243px] h-[448px] rounded-[6px] flex-centred flex-col gap-[12px] bordered-dashed bg-white cursor-pointer hover:bg-light-blue;
 
@@ -10,6 +18,4 @@
   }
 }
 
-.filledCanvas {
-  @apply w-full h-full flex-centred flex-col gap-[12px] bg-red-200;
-}
+

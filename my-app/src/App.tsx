@@ -10,15 +10,13 @@ function App() {
   return (
     <div className={styles.main}>
       <div className={styles.content}>
-        {boards.map((el) => {
-          if (el.name === 'palette') {
-            return <Palette key={el.id} items={el.items} />;
-          }
-          if (el.name === 'constructor') {
-            return <Constructor key={el.id} items={el.items} />;
-          }
-          return null;
-        })}
+        {boards.map((el) => (
+          <div className={styles.side}>
+            {(el.name === 'palette')
+              ? <Palette key={el.id} items={el.items} />
+              : <Constructor key={el.id} items={el.items} />}
+          </div>
+        ))}
       </div>
     </div>
   );

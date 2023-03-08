@@ -2,7 +2,11 @@
   @apply w-screen h-screen flex-centred bg-orange-200;
 
   .content {
-    @apply w-[695px] h-[640px] flex flex-row bg-red-200;
+    @apply w-[695px] h-[640px] flex flex-row;
+  }
+
+  .side {
+    @apply relative pt-[106px] w-1/2 h-full flex justify-start items-center flex-col bg-white;
   }
 }
 
