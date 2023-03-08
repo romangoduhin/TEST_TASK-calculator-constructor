@@ -1,6 +1,8 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { InitialState, Item } from '../types';
+import elementSwapper from '../../helpers/elementSwapper';
 
 const initialState: InitialState = {
   boards: [
@@ -20,6 +22,8 @@ const initialState: InitialState = {
       items: [],
     }],
   disabledItems: [],
+  currentItem: null,
+  swipedItem: null,
 };
 
 export const boardsSlice = createSlice({
@@ -29,7 +33,6 @@ export const boardsSlice = createSlice({
     setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => {
       const { boardId, item } = action.payload;
 
-      // eslint-disable-next-line no-param-reassign
       state.boards = state.boards.map((board) => {
         const isDesiredBoard = board.id === boardId;
         const isBoardExistItem = board.items.some((i) => i.id === item.id);
@@ -45,7 +48,6 @@ export const boardsSlice = createSlice({
     removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => {
       const { boardId, itemId } = action.payload;
 
-      // eslint-disable-next-line no-param-reassign
       state.boards = state.boards.map((board) => {
         const isDesiredBoard = board.id === boardId;
 
@@ -57,22 +59,53 @@ export const boardsSlice = createSlice({
         return board;
       });
     },
+
     disableItem: (state, action: PayloadAction<number>) => {
       const itemId = action.payload;
+      const isExistItem = state.disabledItems.some((i) => i === itemId);
 
-      // eslint-disable-next-line no-param-reassign
-      state.disabledItems = [...state.disabledItems, itemId];
+      if (!isExistItem) {
+        state.disabledItems = [...state.disabledItems, itemId];
+      }
     },
     enableItem: (state, action: PayloadAction<number>) => {
       const itemId = action.payload;
 
-      // eslint-disable-next-line no-param-reassign
       state.disabledItems = state.disabledItems.filter((id) => id !== itemId);
+    },
+    setCurrentItem: (state, action: PayloadAction<Item>) => {
+      const item = action.payload;
+
+      state.currentItem = item;
+    },
+    setSwipedItem: (state, action: PayloadAction<Item>) => {
+      const item = action.payload;
+
+      state.swipedItem = item;
+    },
+    swipeItem: (state) => {
+      const { currentItem, swipedItem } = state;
+
+      if (currentItem && swipedItem) {
+        state.boards = state.boards.map((board) => {
+          if (board.id === 2) {
+            const newBoard = { ...board };
+
+            const swipedItemIndex = board.items.findIndex((i) => i.id === swipedItem.id);
+            const currentItemIndex = board.items.findIndex((i) => i.id === currentItem.id);
+
+            elementSwapper(newBoard.items, swipedItemIndex, currentItemIndex);
+
+            return newBoard;
+          }
+          return board;
+        });
+      }
     },
   },
 });
 
 export const {
-  setItem, removeItem, disableItem, enableItem,
+  setItem, removeItem, disableItem, enableItem, setCurrentItem, setSwipedItem, swipeItem,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

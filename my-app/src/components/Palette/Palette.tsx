@@ -1,11 +1,13 @@
 import React from 'react';
 // @ts-ignore
-import { Draggable } from 'react-drag-and-drop';
+import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
 import { IComponents, IProps } from './Palette.types';
-import { stringify } from '../../helpers/jsonMethods';
+import { parse, stringify } from '../../helpers/jsonMethods';
 import { useAppDispatch } from '../../store/hooks';
-import { removeItem, enableItem } from '../../store/slices/boardsSlice';
+import {
+  removeItem, enableItem, setCurrentItem, swipeItem, setSwipedItem,
+} from '../../store/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
@@ -28,25 +30,49 @@ function Palette({ items, board, disabledItems }: IProps) {
     }
   }
 
-  return (
-    <div className={styles.palette}>
-      {items.map((item) => {
-        const data = stringify(item);
-        const isDisabled = disabledItems && disabledItems.includes(item.id);
+  function handleDragStart(data: string) {
+    const parsedData = parse(data);
 
-        return (
-          <Draggable
-            className={`${isDisabled ? styles.draggableDisabled : styles.draggable}`}
-            key={item.id}
-            type="item"
-            data={data}
-            onDoubleClick={() => handleDoubleClick(item.id, board.id)}
-          >
-            <div>{constructorParts[item.name as keyof IComponents]}</div>
-          </Draggable>
-        );
-      })}
-    </div>
+    dispatch(setCurrentItem(parsedData));
+  }
+
+  function handleDragEnter(data: string) {
+    const parsedData = parse(data);
+
+    dispatch(setSwipedItem(parsedData));
+  }
+
+  function handleDragEnd() {
+    dispatch(swipeItem());
+  }
+
+  return (
+    <Droppable
+      types="item"
+    >
+      <div className={styles.palette}>
+        {items.map((item) => {
+          const data = stringify(item);
+          const isDisabled = disabledItems && disabledItems.includes(item.id);
+
+          return (
+            <Draggable
+              id={item.id}
+              className={`${isDisabled ? styles.draggableDisabled : styles.draggable}`}
+              key={item.id}
+              type="item"
+              data={data}
+              onDragStart={() => handleDragStart(data)}
+              onDragEnter={() => handleDragEnter(data)}
+              onDragEnd={() => handleDragEnd()}
+              onDoubleClick={() => handleDoubleClick(item.id, board.id)}
+            >
+              <div>{constructorParts[item.name as keyof IComponents]}</div>
+            </Draggable>
+          );
+        })}
+      </div>
+    </Droppable>
   );
 }
 

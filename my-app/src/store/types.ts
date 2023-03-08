@@ -10,5 +10,7 @@ export interface Board {
 
 export interface InitialState {
   boards: Array<Board>;
-  disabledItems: Array<number>
+  disabledItems: Array<number> | [],
+  currentItem: Item | null;
+  swipedItem: Item | null;
 }
