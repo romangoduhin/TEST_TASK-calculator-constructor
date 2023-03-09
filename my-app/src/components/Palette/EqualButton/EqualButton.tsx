@@ -1,18 +1,19 @@
 import React from 'react';
 import styles from './EqualButton.module.scss';
 import { useAppDispatch } from '../../../redux/hooks';
-import { calculate, removeVisibleOperator } from '../../../redux/slices/calculatorSlice';
+import { removeVisibleOperator } from '../../../redux/slices/calculatorSlice';
+import { calculateThunk } from '../../../redux/thunks';
 
 function EqualButton() {
   const dispatch = useAppDispatch();
 
   function handleClick() {
-    dispatch(calculate());
+    dispatch(calculateThunk());
     dispatch(removeVisibleOperator());
   }
 
   return (
-    <div className={styles.equalButton} onClick={handleClick}>
+    <div role="button" tabIndex={0} onKeyDown={handleClick} className={styles.equalButton} onClick={handleClick}>
       <div>
         =
       </div>

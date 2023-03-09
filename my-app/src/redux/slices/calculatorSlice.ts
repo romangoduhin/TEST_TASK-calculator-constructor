@@ -16,7 +16,7 @@ export const calculatorSlice = createSlice({
   name: 'calculator',
   initialState,
   reducers: {
-    setValue: (state, action: PayloadAction<string>) => {
+    setValue: (state, action: PayloadAction<string>) => { // setting the invisible value that we calculate
       const newValue = action.payload;
 
       if (state.value === '0' || state.value === 'Ошибка') {
@@ -24,21 +24,26 @@ export const calculatorSlice = createSlice({
       }
 
       if (state.operators.includes(newValue) && state.operators.includes(state.value[state.value.length - 1])) { // replacing operator
-        state.value = state.value.split(''); // TODO fix it
-        state.value.pop();
+        const splitValue: Array<string> = state.value.split('');
+        splitValue.pop();
+        state.value = splitValue.join('');
       }
       state.value += newValue;
     },
-    setVisibleValue: (state, action: PayloadAction<string>) => {
+    setVisibleValue: (state, action: PayloadAction<string>) => { // setting the visible value that we show on display
       const newValue = action.payload;
 
       if (state.visibleValue === '0' || state.visibleValue === 'Ошибка') {
         state.visibleValue = '';
       }
 
-      state.visibleValue += newValue;
+      if (action.payload === '0' && !state.visibleOperator.length) { // set 0 only when we clean value
+        state.visibleValue = '0';
+      } else {
+        state.visibleValue += newValue;
+      }
     },
-    setVisibleOperator: (state, action: PayloadAction<string>) => {
+    setVisibleOperator: (state, action: PayloadAction<string>) => { // set the operator which we highlight
       state.visibleOperator = action.payload;
     },
     removeValue: (state) => {
@@ -50,7 +55,7 @@ export const calculatorSlice = createSlice({
     removeVisibleOperator: (state) => {
       state.visibleOperator = '';
     },
-    calculate: (state) => {
+    calculate: (state) => { // calculating the value and setting it
       const { value } = state;
       let newValue;
 
