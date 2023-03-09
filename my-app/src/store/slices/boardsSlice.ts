@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign, max-len */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { InitialState, Item, Board } from '../types';
@@ -24,87 +24,96 @@ const initialState: InitialState = {
   disabledItems: [],
   currentItem: null,
   currentBoard: null,
-  swipedItem: null,
+  swappedItem: null,
 };
 
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => {
+    setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => { // setting item to board
       const { boardId, item } = action.payload;
 
       state.boards = state.boards.map((board) => {
-        const isDesiredBoard = board.id === boardId;
-        const isBoardExistItem = board.items.some((i) => i.id === item.id);
+        const isSearchBoard = board.id === boardId; // check if board is desired
+        const isBoardExistItem = board.items.some((i) => i.id === item.id); // check if board exist setting item
 
-        if (isDesiredBoard && !isBoardExistItem) {
+        if (isSearchBoard && !isBoardExistItem) {
           const newBoard = { ...board };
-          newBoard.items = [...newBoard.items, item];
+
+          if (item.id === 1) { // setting only Display as first element
+            newBoard.items = [item, ...newBoard.items];
+          } else {
+            newBoard.items = [...newBoard.items, item];
+          }
+
           return newBoard;
         }
         return board;
       });
     },
-    removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => {
+    removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => { // remove item from board
       const { boardId, itemId } = action.payload;
 
       state.boards = state.boards.map((board) => {
-        const isDesiredBoard = board.id === boardId;
+        const isSearchBoard = board.id === boardId; // check if board is desired
 
-        if (isDesiredBoard) {
+        if (isSearchBoard) {
           const newBoard = { ...board };
-          newBoard.items = newBoard.items.filter((item) => item.id !== itemId);
+          newBoard.items = newBoard.items.filter((item) => item.id !== itemId); // removing the current item
           return newBoard;
         }
         return board;
       });
     },
 
-    disableItem: (state, action: PayloadAction<number>) => {
+    disableItem: (state, action: PayloadAction<number>) => { // set item id to array with disabled items
       const itemId = action.payload;
-      const isExistItem = state.disabledItems.some((i) => i === itemId);
+      const isExistItem = state.disabledItems.some((i) => i === itemId); // check if array already has item
 
       if (!isExistItem) {
-        state.disabledItems = [...state.disabledItems, itemId];
+        state.disabledItems = [...state.disabledItems, itemId]; // push item to the array
       }
     },
-    enableItem: (state, action: PayloadAction<number>) => {
+    enableItem: (state, action: PayloadAction<number>) => { // remove item from array with disabled items
       const itemId = action.payload;
 
       state.disabledItems = state.disabledItems.filter((id) => id !== itemId);
     },
-    setCurrentItem: (state, action: PayloadAction<Item>) => {
+    setCurrentItem: (state, action: PayloadAction<Item>) => { // setting current item
       const item = action.payload;
 
       state.currentItem = item;
     },
-    setCurrentBoard: (state, action: PayloadAction<Board>) => {
+    setCurrentBoard: (state, action: PayloadAction<Board>) => { // setting current board
       const board = action.payload;
 
       state.currentBoard = board;
     },
-    setSwipedItem: (state, action: PayloadAction<Item>) => {
+    setSwappedItem: (state, action: PayloadAction<Item>) => { // setting item that will swap with current item
       const item = action.payload;
 
-      state.swipedItem = item;
+      state.swappedItem = item;
     },
-    swipeItem: (state) => {
-      const { currentItem, swipedItem, currentBoard } = state;
+    swapItem: (state) => { // swap the current and swapped items
+      const { currentItem, swappedItem, currentBoard } = state;
+      const isItemsExist = currentItem && swappedItem; // check if items exist
+      const isItemsNotDisplay = isItemsExist && ((currentItem.id !== 1) && (swappedItem.id !== 1)); // check if one of the item is Display, because ww cant swap Display part
+      const isBoardConstructor = currentBoard && currentBoard.id === 2; // check if the board is constructor board
 
-      if (currentItem && swipedItem && currentBoard && currentBoard.id === 2) {
+      if (isBoardConstructor && isItemsNotDisplay && isItemsExist) {
         state.boards = state.boards.map((board) => {
           if (board.id === 2) {
             const newBoard = { ...board };
 
-            const swipedItemIndex = board.items.findIndex((i) => i.id === swipedItem.id);
+            const swappedItemIndex = board.items.findIndex((i) => i.id === swappedItem.id);
             const currentItemIndex = board.items.findIndex((i) => i.id === currentItem.id);
 
-            const isIndexesCorrect = (swipedItemIndex >= 0 && currentItemIndex >= 0);
-            const isIndexesEqual = swipedItemIndex === currentItemIndex;
+            const isIndexesCorrect = (swappedItemIndex >= 0 && currentItemIndex >= 0); // check if indexes are correct, because it can be -1 if we finish onDragEnd on non Droppable area
+            const isIndexesEqual = swappedItemIndex === currentItemIndex; // check if indexes equal each other
 
             if (!isIndexesEqual && isIndexesCorrect) {
-              elementSwapper(newBoard.items, swipedItemIndex, currentItemIndex);
+              elementSwapper(newBoard.items, swappedItemIndex, currentItemIndex); // swap current item and swapped item
             }
 
             return newBoard;
@@ -122,8 +131,8 @@ export const {
   disableItem,
   enableItem,
   setCurrentItem,
-  setSwipedItem,
-  swipeItem,
+  setSwappedItem,
+  swapItem,
   setCurrentBoard,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

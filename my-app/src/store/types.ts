@@ -13,5 +13,5 @@ export interface InitialState {
   disabledItems: Array<number> | [],
   currentItem: Item | null;
   currentBoard: Board | null;
-  swipedItem: Item | null;
+  swappedItem: Item | null;
 }

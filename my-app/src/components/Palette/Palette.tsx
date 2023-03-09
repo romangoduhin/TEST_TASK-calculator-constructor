@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React from 'react';
+import React, { useState } from 'react';
 // @ts-ignore
 import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
@@ -7,15 +7,18 @@ import { IComponents, IProps } from './Palette.types';
 import { parse, stringify } from '../../helpers/jsonMethods';
 import { useAppDispatch } from '../../store/hooks';
 import {
-  removeItem, enableItem, setCurrentItem, swipeItem, setSwipedItem, setCurrentBoard,
+  removeItem, enableItem, setCurrentItem, swapItem, setSwappedItem, setCurrentBoard,
 } from '../../store/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
 import EqualButton from './EqualButton/EqualButton';
+import Line from './Line/Line';
 
 function Palette({ items, board, disabledItems }: IProps) {
   const dispatch = useAppDispatch();
+
+  const [isLineVisible, setIsLineVisible] = useState(false);
 
   const constructorParts: IComponents = {
     display: <Display />,
@@ -23,6 +26,12 @@ function Palette({ items, board, disabledItems }: IProps) {
     numbers: <Numbers />,
     equal: <EqualButton />,
   };
+
+  function switchLineVisibility(bool: boolean) {
+    if (board.id === 2) {
+      setIsLineVisible(bool);
+    }
+  }
 
   function handleDoubleClick(itemId: number, boardId: number) {
     if (boardId === 2) {
@@ -32,7 +41,10 @@ function Palette({ items, board, disabledItems }: IProps) {
   }
 
   function handleDragStart(data: string) {
+    switchLineVisibility(true);
+
     const parsedData = parse(data);
+
     if (parsedData) {
       dispatch(setCurrentItem(parsedData));
     }
@@ -42,13 +54,15 @@ function Palette({ items, board, disabledItems }: IProps) {
     const parsedData = parse(data);
 
     if (board && parsedData) {
-      dispatch(setSwipedItem(parsedData));
+      dispatch(setSwappedItem(parsedData));
       dispatch(setCurrentBoard(board));
     }
   }
 
   function handleDragEnd() {
-    dispatch(swipeItem());
+    switchLineVisibility(false);
+
+    dispatch(swapItem());
   }
 
   return (
@@ -56,6 +70,8 @@ function Palette({ items, board, disabledItems }: IProps) {
       types="item"
     >
       <div className={styles.palette}>
+        {isLineVisible && <Line />}
+
         {items.map((item) => {
           const data = stringify(item);
           const isDisabled = disabledItems && disabledItems.includes(item.id);
