@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign, max-len */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { InitialState, Item, Board } from '../types';
+import { Item, Board, InitialStateBoards } from '../types';
 import elementSwapper from '../../helpers/elementSwapper';
 import { isConstructor, isDisplay } from '../../helpers/checkers';
 
-const initialState: InitialState = {
+const initialState: InitialStateBoards = {
   boards: [
     {
       id: 1,
@@ -67,7 +67,6 @@ export const boardsSlice = createSlice({
         return board;
       });
     },
-
     disableItem: (state, action: PayloadAction<number>) => { // set item id to array with disabled items
       const itemId = action.payload;
       const isExistItem = state.disabledItems.some((i) => i === itemId); // check if array already has item

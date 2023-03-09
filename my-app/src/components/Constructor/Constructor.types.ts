@@ -1,4 +1,4 @@
-import { Board, Items } from '../../store/types';
+import { Board, Items } from '../../redux/types';
 
 export interface IProps {
   items: Items,

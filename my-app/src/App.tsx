@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './App.module.scss';
 import Palette from './components/Palette/Palette';
 import Constructor from './components/Constructor/Constructor';
-import { useAppSelector } from './store/hooks';
+import { useAppSelector } from './redux/hooks';
 import { isPalette } from './helpers/checkers';
 
 function App() {

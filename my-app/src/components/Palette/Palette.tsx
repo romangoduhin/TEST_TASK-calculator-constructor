@@ -5,10 +5,10 @@ import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
 import { IComponents, IProps } from './Palette.types';
 import { parse, stringify } from '../../helpers/jsonMethods';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import {
   removeItem, enableItem, setCurrentItem, swapItem, setSwappedItem, setCurrentBoard,
-} from '../../store/slices/boardsSlice';
+} from '../../redux/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
@@ -97,6 +97,7 @@ function Palette({ items, board, disabledItems }: IProps) {
               onDragEnter={() => handleDragEnter(data)}
               onDragEnd={() => handleDragEnd()}
               onDoubleClick={() => handleDoubleClick(item.id)}
+              // onDrop={() => handleDragEnter(data)} //TODO update to it
             >
               <div className={styles.part}>{constructorParts[item.name as keyof IComponents]}</div>
             </Draggable>

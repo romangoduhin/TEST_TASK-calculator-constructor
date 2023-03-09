@@ -8,10 +8,18 @@ export interface Board {
   items: Items,
 }
 
-export interface InitialState {
+export interface InitialStateBoards {
   boards: Array<Board>;
   disabledItems: Array<number> | [],
   currentItem: Item | null;
   currentBoard: Board | null;
   swappedItem: Item | null;
+}
+
+export interface InitialStateCalculator {
+  numbers: any[],
+  operators: any[],
+  value: string,
+  visibleValue: string
+  visibleOperator: string
 }
