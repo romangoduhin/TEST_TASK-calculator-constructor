@@ -7,10 +7,18 @@
 - npm run dev
 
 # How to use this calculator?
-1) First of all you have to move any Calculator part from pallete to canvas
-2) As you can see you can build your custom calculator
-3) You can swap the parts between each other
-4) If you want to calculate something, turn switch on "Runtime" mode and use it :)
+1) First of all you see the Palette of calculator constructor
+- you can add part from Palette to Canvas by drag and drop
+- you can remove the part from Canvas by double click
+- you can swap the parts between each other
+### EXCEPTIONS: 
+- display part is constantly on the top of the Canvas
+- you can't use the calculator logic when the mode on Switch panel is "Constructor"
+- you can't add same part twice 
+2) If you want to calculate something, turn switch on "Runtime" mode and use it :)
+### EXCEPTIONS: 
+- you can swap the parts between each other on "Runtime" mode
+- when you switch mode back to "Constuctor" your dispay will clean up
 
 # What I used for it?
 | Package name                                                                                        | Version  |                                                | 
