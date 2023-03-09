@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './App.module.scss';
 import Palette from './components/Palette/Palette';
 import Constructor from './components/Constructor/Constructor';
 import { useAppSelector } from './redux/hooks';
-import { isPalette } from './helpers/checkers';
+import { isPalette, isRuntimeMode } from './helpers/checkers';
 
 function App() {
   const { boards, disabledItems, mode } = useAppSelector((state) => state.boards);
 
-  const [isRuntime, setIsRuntime] = useState(false);
-
-  useEffect(() => {
-    if (mode === 'runtime') {
-      setIsRuntime(true);
-      return;
-    }
-    setIsRuntime(false);
-  }, [mode]);
+  const isRuntime = isRuntimeMode(mode);
 
   return (
     <div className={styles.main}>

@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Item, Board, InitialStateBoards } from '../types';
 import elementSwapper from '../../helpers/elementSwapper';
-import { isConstructor, isDisplay } from '../../helpers/checkers';
+import {
+  isConstructor, isConstructorMode, isDisplay, isRuntimeMode,
+} from '../../helpers/checkers';
 
 const initialState: InitialStateBoards = {
   boards: [
@@ -124,10 +126,12 @@ export const boardsSlice = createSlice({
       }
     },
     switchMode: (state) => {
-      if (state.mode === 'constructor') {
-        state.mode = 'runtime';
-      } else if ((state.mode === 'runtime')) {
+      const { mode } = state;
+
+      if (isRuntimeMode(mode)) {
         state.mode = 'constructor';
+      } else if (isConstructorMode(mode)) {
+        state.mode = 'runtime';
       }
     },
   },

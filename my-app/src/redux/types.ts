@@ -1,6 +1,7 @@
 export interface Item { id: number, name: string }
 
 export type Items = Array<Item> | [];
+export type Mode = 'constructor' | 'runtime';
 
 export interface Board {
   id: number,
@@ -14,7 +15,7 @@ export interface InitialStateBoards {
   currentItem: Item | null;
   currentBoard: Board | null;
   swappedItem: Item | null;
-  mode: string,
+  mode: Mode,
 }
 
 export interface InitialStateCalculator {
