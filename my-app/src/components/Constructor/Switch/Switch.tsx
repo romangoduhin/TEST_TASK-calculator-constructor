@@ -6,6 +6,7 @@ import arrowsIconActive from '../../../assets/arrowsIconActive.svg';
 import styles from './Switch.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { switchMode } from '../../../redux/slices/boardsSlice';
+import { cleanCalculator } from '../../../redux/thunks';
 
 function Switch() {
   const dispatch = useAppDispatch();
@@ -16,6 +17,7 @@ function Switch() {
 
   function handleSwitch() {
     dispatch(switchMode());
+    dispatch(cleanCalculator());
   }
 
   useEffect(() => {

@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import { Dispatch } from '@reduxjs/toolkit';
 import {
-  calculate, removeValue, removeVisibleValue,
+  calculate, removeValue, removeVisibleOperator, removeVisibleValue,
 } from './slices/calculatorSlice';
 
 export const calculateThunk = () => (dispatch: Dispatch) => {
@@ -13,4 +12,10 @@ export const calculateThunk = () => (dispatch: Dispatch) => {
     },
     1000,
   );
+};
+
+export const cleanCalculator = () => (dispatch: Dispatch) => {
+  dispatch(removeValue());
+  dispatch(removeVisibleValue());
+  dispatch(removeVisibleOperator());
 };
