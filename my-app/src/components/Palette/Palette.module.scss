@@ -11,7 +11,7 @@
 
   .draggable {
     .part {
-      @apply w-auto h-auto p-[4px] bg-inherit;
+      @apply w-auto h-auto p-[4px] bg-inherit  cursor-pointer;
     }
   }
 
