@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { InitialState, Item, Board } from '../types';
 import elementSwapper from '../../helpers/elementSwapper';
+import { isConstructor, isDisplay } from '../../helpers/checkers';
 
 const initialState: InitialState = {
   boards: [
@@ -41,7 +42,7 @@ export const boardsSlice = createSlice({
         if (isSearchBoard && !isBoardExistItem) {
           const newBoard = { ...board };
 
-          if (item.id === 1) { // setting only Display as first element
+          if (isDisplay(item)) { // setting only Display as first element
             newBoard.items = [item, ...newBoard.items];
           } else {
             newBoard.items = [...newBoard.items, item];
@@ -98,12 +99,12 @@ export const boardsSlice = createSlice({
     swapItem: (state) => { // swap the current and swapped items
       const { currentItem, swappedItem, currentBoard } = state;
       const isItemsExist = currentItem && swappedItem; // check if items exist
-      const isItemsNotDisplay = isItemsExist && ((currentItem.id !== 1) && (swappedItem.id !== 1)); // check if one of the item is Display, because ww cant swap Display part
-      const isBoardConstructor = currentBoard && currentBoard.id === 2; // check if the board is constructor board
+      const isItemsNotDisplay = isItemsExist && ((!isDisplay(currentItem)) && (!isDisplay(swappedItem))); // check if one of the item is Display, because ww cant swap Display part
+      const isBoardConstructor = currentBoard && isConstructor(currentBoard); // check if the board is constructor board
 
       if (isBoardConstructor && isItemsNotDisplay && isItemsExist) {
         state.boards = state.boards.map((board) => {
-          if (board.id === 2) {
+          if (isConstructor(board)) {
             const newBoard = { ...board };
 
             const swappedItemIndex = board.items.findIndex((i) => i.id === swappedItem.id);

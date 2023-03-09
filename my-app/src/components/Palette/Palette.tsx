@@ -14,6 +14,7 @@ import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
 import EqualButton from './EqualButton/EqualButton';
 import Line from './Line/Line';
+import { isConstructor, isDisplay } from '../../helpers/checkers';
 
 function Palette({ items, board, disabledItems }: IProps) {
   const dispatch = useAppDispatch();
@@ -28,13 +29,17 @@ function Palette({ items, board, disabledItems }: IProps) {
   };
 
   function switchLineVisibility(bool: boolean) {
-    if (board.id === 2) {
+    const isDisplayExist = items.some((item) => isDisplay(item));
+
+    if (isConstructor(board) && isDisplayExist) {
       setIsLineVisible(bool);
     }
   }
 
-  function handleDoubleClick(itemId: number, boardId: number) {
-    if (boardId === 2) {
+  function handleDoubleClick(itemId: number) {
+    if (isConstructor(board)) {
+      const boardId = board.id;
+
       dispatch(removeItem({ boardId, itemId }));
       dispatch(enableItem(itemId));
     }
@@ -75,7 +80,7 @@ function Palette({ items, board, disabledItems }: IProps) {
         {items.map((item) => {
           const data = stringify(item);
           const isDisabled = disabledItems && disabledItems.includes(item.id);
-          const isConstructorItem = board.id === 2;
+          const isConstructorItem = isConstructor(board);
 
           return (
             <Draggable
@@ -89,7 +94,7 @@ function Palette({ items, board, disabledItems }: IProps) {
               onDragStart={() => handleDragStart(data)}
               onDragEnter={() => handleDragEnter(data)}
               onDragEnd={() => handleDragEnd()}
-              onDoubleClick={() => handleDoubleClick(item.id, board.id)}
+              onDoubleClick={() => handleDoubleClick(item.id)}
             >
               <div className={styles.part}>{constructorParts[item.name as keyof IComponents]}</div>
             </Draggable>

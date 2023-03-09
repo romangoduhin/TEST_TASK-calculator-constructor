@@ -3,6 +3,7 @@ import styles from './App.module.scss';
 import Palette from './components/Palette/Palette';
 import Constructor from './components/Constructor/Constructor';
 import { useAppSelector } from './store/hooks';
+import { isPalette } from './helpers/checkers';
 
 function App() {
   const { boards, disabledItems } = useAppSelector((state) => state.boards);
@@ -12,7 +13,7 @@ function App() {
       <div className={styles.content}>
         {boards.map((board) => (
           <div className={styles.side} key={board.id}>
-            {(board.name === 'palette')
+            {(isPalette(board))
               ? <Palette items={board.items} board={board} disabledItems={disabledItems} />
               : <Constructor items={board.items} board={board} />}
           </div>
