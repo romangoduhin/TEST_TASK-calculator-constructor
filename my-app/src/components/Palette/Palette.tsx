@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore
 import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
@@ -14,7 +14,7 @@ import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
 import EqualButton from './EqualButton/EqualButton';
 import Line from './Line/Line';
-import { isConstructor, isDisplay } from '../../helpers/checkers';
+import { isConstructor, isDisplay, isRuntimeMode } from '../../helpers/checkers';
 
 function Palette({ items, board, disabledItems }: IProps) {
   const constructorParts: IComponents = {
@@ -29,7 +29,8 @@ function Palette({ items, board, disabledItems }: IProps) {
   const dispatch = useAppDispatch();
 
   const [isLineVisible, setIsLineVisible] = useState(false);
-  const [isCalculatingEnable, setIsCalculatingEnable] = useState(false);
+
+  const isCalculatingEnable = isRuntimeMode(mode);
 
   function switchLineVisibility(bool: boolean) {
     const isDisplayExist = items.some((item) => isDisplay(item));
@@ -78,15 +79,6 @@ function Palette({ items, board, disabledItems }: IProps) {
       dispatch(swapItem());
     }
   }
-
-  useEffect(() => {
-    if (mode === 'runtime') {
-      setIsCalculatingEnable(true);
-      return;
-    }
-
-    setIsCalculatingEnable(false);
-  }, [mode]);
 
   return (
     <Droppable

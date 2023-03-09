@@ -1,4 +1,6 @@
-import { Board, Item } from '../redux/types';
+/* eslint-disable no-bitwise */
+
+import { Board, Item, Mode } from '../redux/types';
 
 export function isDisplay(obj: Item) {
   return !!(obj.id && obj.name === 'display' && obj.id === 1);
@@ -10,6 +12,14 @@ export function isConstructor(obj: Board) {
 
 export function isPalette(obj: Board) {
   return !!(obj.id && obj.name === 'palette' && obj.id === 1);
+}
+
+export function isRuntimeMode(mode: Mode) {
+  return mode === 'runtime';
+}
+
+export function isConstructorMode(mode: Mode) {
+  return mode === 'constructor';
 }
 
 export function isInteger(num: number) {
