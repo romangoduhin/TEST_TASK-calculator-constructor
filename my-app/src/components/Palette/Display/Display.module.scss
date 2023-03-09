@@ -1,16 +1,8 @@
 .display {
   @apply w-[232px] h-[52px] rounded-[4px] overflow-hidden bg-light-grey;
 
-  p {
-    @apply px-[8px] py-[4px] w-full h-full flex flex-row justify-end items-center font-extrabold;
-  }
-
-  .big {
-    @apply text-[36px] ;
-  }
-
-  .default {
-    @apply text-[24px] ;
+  .text {
+    @apply px-[8px] py-[4px] w-full h-full flex flex-row justify-end items-center font-extrabold text-[24px];
   }
 }
 

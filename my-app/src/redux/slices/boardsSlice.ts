@@ -26,6 +26,7 @@ const initialState: InitialStateBoards = {
   currentItem: null,
   currentBoard: null,
   swappedItem: null,
+  mode: 'constructor',
 };
 
 export const boardsSlice = createSlice({
@@ -122,6 +123,13 @@ export const boardsSlice = createSlice({
         });
       }
     },
+    switchMode: (state) => {
+      if (state.mode === 'constructor') {
+        state.mode = 'runtime';
+      } else if ((state.mode === 'runtime')) {
+        state.mode = 'constructor';
+      }
+    },
   },
 });
 
@@ -131,8 +139,9 @@ export const {
   disableItem,
   enableItem,
   setCurrentItem,
+  setCurrentBoard,
   setSwappedItem,
   swapItem,
-  setCurrentBoard,
+  switchMode,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

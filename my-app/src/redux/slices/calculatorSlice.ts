@@ -33,24 +33,32 @@ export const calculatorSlice = createSlice({
     setVisibleValue: (state, action: PayloadAction<string>) => { // setting the visible value that we show on display
       const newValue = action.payload;
 
-      if (state.visibleValue === '0' || state.visibleValue === 'Ошибка') {
+      if (newValue === '.') {
+        state.visibleValue = `${state.visibleValue}.`;
+        return;
+      }
+
+      if (newValue === '') {
+        state.visibleValue = '';
+        return;
+      }
+
+      if (state.visibleValue === '0' || state.visibleValue === 'Ошибка' || state.visibleValue === 'Не определено') {
         state.visibleValue = '';
       }
 
-      if (action.payload === '0' && !state.visibleOperator.length) { // set 0 only when we clean value
-        state.visibleValue = '0';
-      } else {
-        state.visibleValue += newValue;
-      }
+      state.visibleValue += newValue;
     },
     setVisibleOperator: (state, action: PayloadAction<string>) => { // set the operator which we highlight
-      state.visibleOperator = action.payload;
+      const operator = action.payload;
+
+      state.visibleOperator = operator;
     },
     removeValue: (state) => {
       state.value = '0';
     },
     removeVisibleValue: (state) => {
-      state.visibleValue = '';
+      state.visibleValue = '0';
     },
     removeVisibleOperator: (state) => {
       state.visibleOperator = '';
@@ -64,15 +72,17 @@ export const calculatorSlice = createSlice({
 
         if (!Number.isFinite(newValue)) {
           newValue = 'Не определено';
-        }
-        if (!isInteger(newValue)) {
-          newValue = newValue.toFixed(2);
+        } else if (!isInteger(newValue)) {
+          newValue = +(newValue.toFixed(10)); // fix value till 10 digits length and cut useless zeroes
         }
       } catch {
         newValue = 'Ошибка';
       }
-      state.value = String(newValue);
-      state.visibleValue = state.value;
+
+      newValue = String(newValue);
+
+      state.value = newValue;
+      state.visibleValue = newValue;
     },
   },
 });

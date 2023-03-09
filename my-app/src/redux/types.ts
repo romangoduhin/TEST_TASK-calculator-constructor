@@ -14,6 +14,7 @@ export interface InitialStateBoards {
   currentItem: Item | null;
   currentBoard: Board | null;
   swappedItem: Item | null;
+  mode: string,
 }
 
 export interface InitialStateCalculator {

@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../../templates/Button/Button';
 import styles from './Operators.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { setValue, removeVisibleValue, setVisibleOperator } from '../../../redux/slices/calculatorSlice';
+import { setValue, setVisibleOperator, setVisibleValue } from '../../../redux/slices/calculatorSlice';
 
 function Operators() {
   const { visibleOperator, operators } = useAppSelector((state) => state.calculator);
@@ -10,7 +10,7 @@ function Operators() {
 
   function handleClick(value: string) {
     dispatch(setValue(value));
-    dispatch(removeVisibleValue());
+    dispatch(setVisibleValue(''));
     dispatch(setVisibleOperator(value));
   }
 
