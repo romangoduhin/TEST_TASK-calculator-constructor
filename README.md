@@ -32,3 +32,4 @@
 |[tailwind css](https://tailwindcss.com/docs)                                                         | ^3.2.7   | CSS Framework                                  |
 |[sass](https://www.npmjs.com/package/sass)                                                           | ^1.58.3  | provides SCSS functionality                    |
 |[postcss](https://www.npmjs.com/package/postcss)                                                     | ^8.4.21  | lint CSS                                       |
+|[react-drag-and-drop](https://www.npmjs.com/package/react-drag-and-drop)                             | ^3.0.0   | provides Drag and Drop functionality           |
