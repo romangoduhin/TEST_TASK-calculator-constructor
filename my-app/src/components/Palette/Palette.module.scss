@@ -3,9 +3,17 @@
 
   .draggable {
     @apply pointer-events-auto cursor-pointer;
+
+    .part {
+      @apply w-auto h-auto custom-block;
+    }
   }
 
   .draggableDisabled {
     @apply pointer-events-none opacity-50;
+
+    .part {
+      @apply w-auto h-auto p-[4px] bg-inherit;
+    }
   }
 }

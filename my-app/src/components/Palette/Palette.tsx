@@ -71,7 +71,7 @@ function Palette({ items, board, disabledItems }: IProps) {
               onDragEnd={() => handleDragEnd()}
               onDoubleClick={() => handleDoubleClick(item.id, board.id)}
             >
-              <div>{constructorParts[item.name as keyof IComponents]}</div>
+              <div className={styles.part}>{constructorParts[item.name as keyof IComponents]}</div>
             </Draggable>
           );
         })}

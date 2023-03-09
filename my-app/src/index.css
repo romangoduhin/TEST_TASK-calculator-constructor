@@ -12,7 +12,7 @@
     }
 
     .custom-block {
-        @apply p-[4px] flex flex-row justify-between items-center  rounded-[4px] bg-white shadow-custom;
+        @apply p-[4px] rounded-[4px] bg-white shadow-custom;
     }
 
     .custom-switch {
@@ -40,7 +40,7 @@
     }
 
     .big-btn {
-        @apply w-[152px] h-[48px]
+        @apply w-[156px] h-[48px]
     }
 
     .large-btn {
