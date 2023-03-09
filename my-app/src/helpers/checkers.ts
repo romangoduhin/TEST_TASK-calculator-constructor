@@ -1,4 +1,4 @@
-import { Board, Item } from '../store/types';
+import { Board, Item } from '../redux/types';
 
 export function isDisplay(obj: Item) {
   return !!(obj.id && obj.name === 'display' && obj.id === 1);
@@ -10,4 +10,8 @@ export function isConstructor(obj: Board) {
 
 export function isPalette(obj: Board) {
   return !!(obj.id && obj.name === 'palette' && obj.id === 1);
+}
+
+export function isInteger(num: number) {
+  return (num ^ 0) === num;
 }

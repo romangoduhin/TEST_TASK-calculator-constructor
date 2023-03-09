@@ -4,8 +4,8 @@ import { Droppable } from 'react-drag-and-drop';
 import AddIconSvg from '../../../assets/addIcon.svg';
 import styles from './Canvas.module.scss';
 import { IProps } from './Canvas.types';
-import { useAppDispatch } from '../../../store/hooks';
-import { disableItem, setItem } from '../../../store/slices/boardsSlice';
+import { useAppDispatch } from '../../../redux/hooks';
+import { disableItem, setItem } from '../../../redux/slices/boardsSlice';
 import { parse } from '../../../helpers/jsonMethods';
 import Palette from '../../Palette/Palette';
 

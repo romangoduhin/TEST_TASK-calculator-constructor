@@ -8,7 +8,7 @@
     }
 
     .custom-btn {
-        @apply flex justify-center items-center border border-solid border-border-color rounded-[6px] font-medium text-[14px] leading-[15px];
+        @apply flex justify-center items-center border border-solid border-border-color rounded-[6px] font-medium text-[14px] leading-[15px] hover:border-purple active:bg-purple active:text-white;
     }
 
     .custom-block {
@@ -40,7 +40,7 @@
     }
 
     .big-btn {
-        @apply w-[156px] h-[48px]
+        @apply w-[152px] h-[48px]
     }
 
     .large-btn {

@@ -5,7 +5,11 @@
     @apply pointer-events-auto cursor-pointer;
 
     .part {
-      @apply w-auto h-auto custom-block;
+      @apply w-auto h-auto custom-block ;
+    }
+
+    .disabled {
+      @apply pointer-events-none ;
     }
   }
 
@@ -15,11 +19,21 @@
     .part {
       @apply w-auto h-auto p-[4px] bg-inherit ;
     }
+
+    .disabled {
+      @apply pointer-events-none ;
+    }
   }
 
   .draggable {
+    @apply cursor-pointer;
+
     .part {
-      @apply w-auto h-auto p-[4px] bg-inherit  cursor-pointer;
+      @apply w-auto h-auto p-[4px] bg-inherit cursor-pointer;
+    }
+
+    .disabled {
+      @apply pointer-events-none ;
     }
   }
 
@@ -28,6 +42,10 @@
 
     .part {
       @apply w-auto h-auto p-[4px] bg-inherit;
+    }
+
+    .disabled {
+      @apply pointer-events-none ;
     }
   }
 }

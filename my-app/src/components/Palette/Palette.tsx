@@ -1,14 +1,14 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // @ts-ignore
 import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
 import { IComponents, IProps } from './Palette.types';
 import { parse, stringify } from '../../helpers/jsonMethods';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   removeItem, enableItem, setCurrentItem, swapItem, setSwappedItem, setCurrentBoard,
-} from '../../store/slices/boardsSlice';
+} from '../../redux/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
 import Numbers from './Numbers/Numbers';
@@ -17,16 +17,19 @@ import Line from './Line/Line';
 import { isConstructor, isDisplay } from '../../helpers/checkers';
 
 function Palette({ items, board, disabledItems }: IProps) {
-  const dispatch = useAppDispatch();
-
-  const [isLineVisible, setIsLineVisible] = useState(false);
-
   const constructorParts: IComponents = {
     display: <Display />,
     operators: <Operators />,
     numbers: <Numbers />,
     equal: <EqualButton />,
   };
+
+  const { mode } = useAppSelector((state) => state.boards);
+
+  const dispatch = useAppDispatch();
+
+  const [isLineVisible, setIsLineVisible] = useState(false);
+  const [isCalculatingEnable, setIsCalculatingEnable] = useState(false);
 
   function switchLineVisibility(bool: boolean) {
     const isDisplayExist = items.some((item) => isDisplay(item));
@@ -37,7 +40,7 @@ function Palette({ items, board, disabledItems }: IProps) {
   }
 
   function handleDoubleClick(itemId: number) {
-    if (isConstructor(board)) {
+    if (isConstructor(board) && !isCalculatingEnable) {
       const boardId = board.id;
 
       dispatch(removeItem({ boardId, itemId }));
@@ -46,29 +49,44 @@ function Palette({ items, board, disabledItems }: IProps) {
   }
 
   function handleDragStart(data: string) {
-    switchLineVisibility(true);
+    if (!isCalculatingEnable) {
+      switchLineVisibility(true);
 
-    const parsedData = parse(data);
+      const parsedData = parse(data);
 
-    if (parsedData) {
-      dispatch(setCurrentItem(parsedData));
+      if (parsedData) {
+        dispatch(setCurrentItem(parsedData));
+      }
     }
   }
 
   function handleDragEnter(data: string) {
-    const parsedData = parse(data);
+    if (!isCalculatingEnable) {
+      const parsedData = parse(data);
 
-    if (board && parsedData) {
-      dispatch(setSwappedItem(parsedData));
-      dispatch(setCurrentBoard(board));
+      if (board && parsedData) {
+        dispatch(setSwappedItem(parsedData));
+        dispatch(setCurrentBoard(board));
+      }
     }
   }
 
   function handleDragEnd() {
-    switchLineVisibility(false);
+    if (!isCalculatingEnable) {
+      switchLineVisibility(false);
 
-    dispatch(swapItem());
+      dispatch(swapItem());
+    }
   }
+
+  useEffect(() => {
+    if (mode === 'runtime') {
+      setIsCalculatingEnable(true);
+      return;
+    }
+
+    setIsCalculatingEnable(false);
+  }, [mode]);
 
   return (
     <Droppable
@@ -86,7 +104,8 @@ function Palette({ items, board, disabledItems }: IProps) {
           return (
             <Draggable
               id={item.id}
-              enabled={!(isConstructorBoard && isDisplayPart) && !isDisabled}
+              enabled={!isCalculatingEnable
+                  || (!(isConstructorBoard && isDisplayPart) && !isDisabled)}
               className={isConstructorBoard
                 ? isDisplayPart ? styles.draggableNotAllowed : styles.draggable
                 : isDisabled ? styles.draggableDisabled : styles.draggableBordered}
@@ -97,8 +116,9 @@ function Palette({ items, board, disabledItems }: IProps) {
               onDragEnter={() => handleDragEnter(data)}
               onDragEnd={() => handleDragEnd()}
               onDoubleClick={() => handleDoubleClick(item.id)}
+              // onDrop={() => handleDragEnter(data)} //TODO update to it
             >
-              <div className={styles.part}>{constructorParts[item.name as keyof IComponents]}</div>
+              <div className={isCalculatingEnable ? styles.part : `${styles.part} ${styles.disabled}`}>{constructorParts[item.name as keyof IComponents]}</div>
             </Draggable>
           );
         })}
