@@ -1,0 +1,7 @@
+.operatorsBlock {
+  @apply w-[232px] h-[48px] flex flex-row justify-between items-center;
+
+  .visibleOperator {
+    @apply small-btn bg-purple text-white pointer-events-none;
+  }
+}

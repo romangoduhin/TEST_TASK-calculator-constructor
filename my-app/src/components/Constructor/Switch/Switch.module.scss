@@ -1,0 +1,15 @@
+.switch {
+  @apply absolute top-[40px] right-[55px] w-[243px] h-[38px] custom-switch;
+
+  .runtimeButton {
+    @apply w-[108px] switch-btn;
+  }
+
+  .constructorButton {
+    @apply w-[133px] switch-btn;
+  }
+
+  .activeButton {
+    @apply active-switch-btn;
+  }
+}

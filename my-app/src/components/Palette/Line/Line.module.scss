@@ -1,0 +1,11 @@
+.lineWrapper {
+  @apply absolute top-[65px] left-0 w-full h-[4px] flex flex-row justify-between items-center;
+
+  .line {
+    @apply w-full h-[2px] bg-purple
+  }
+
+  .circle {
+    @apply flex flex-row justify-between w-[4px] h-[4px] bg-purple rotate-45;
+  }
+}

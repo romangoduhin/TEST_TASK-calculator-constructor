@@ -1,0 +1,7 @@
+.equalButton {
+  @apply w-[232px] h-[66px] flex-centred;
+
+  div {
+    @apply large-btn flex-centred text-[14px] font-medium text-white rounded-[4px] bg-purple active:brightness-110;
+  }
+}
