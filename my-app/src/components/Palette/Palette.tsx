@@ -108,7 +108,6 @@ function Palette({ items, board, disabledItems }: IProps) {
               onDragEnter={() => handleDragEnter(data)}
               onDragEnd={() => handleDragEnd()}
               onDoubleClick={() => handleDoubleClick(item.id)}
-              // onDrop={() => handleDragEnter(data)} //TODO update to it
             >
               <div className={isCalculatingEnable ? styles.part : `${styles.part} ${styles.disabled}`}>{constructorParts[item.name as keyof IComponents]}</div>
             </Draggable>
