@@ -1,11 +1,17 @@
 .palette {
   @apply w-full h-[448px] flex flex-col justify-start items-center gap-[12px] bg-white;
 
-  .draggable {
+  .draggableBordered {
     @apply pointer-events-auto cursor-pointer;
 
     .part {
       @apply w-auto h-auto custom-block;
+    }
+  }
+
+  .draggable {
+    .part {
+      @apply w-auto h-auto p-[4px] bg-inherit;
     }
   }
 

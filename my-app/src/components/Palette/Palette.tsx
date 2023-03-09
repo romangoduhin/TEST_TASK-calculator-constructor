@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 // @ts-ignore
 import { Draggable, Droppable } from 'react-drag-and-drop';
@@ -58,11 +59,14 @@ function Palette({ items, board, disabledItems }: IProps) {
         {items.map((item) => {
           const data = stringify(item);
           const isDisabled = disabledItems && disabledItems.includes(item.id);
+          const isConstructorItem = board.id === 2;
 
           return (
             <Draggable
               id={item.id}
-              className={`${isDisabled ? styles.draggableDisabled : styles.draggable}`}
+              className={isConstructorItem
+                ? styles.draggable : isDisabled
+                  ? styles.draggableDisabled : styles.draggableBordered}
               key={item.id}
               type="item"
               data={data}
