@@ -80,14 +80,16 @@ function Palette({ items, board, disabledItems }: IProps) {
         {items.map((item) => {
           const data = stringify(item);
           const isDisabled = disabledItems && disabledItems.includes(item.id);
-          const isConstructorItem = isConstructor(board);
+          const isConstructorBoard = isConstructor(board);
+          const isDisplayPart = isDisplay(item);
 
           return (
             <Draggable
               id={item.id}
-              className={isConstructorItem
-                ? styles.draggable : isDisabled
-                  ? styles.draggableDisabled : styles.draggableBordered}
+              enabled={!(isConstructorBoard && isDisplayPart) && !isDisabled}
+              className={isConstructorBoard
+                ? isDisplayPart ? styles.draggableNotAllowed : styles.draggable
+                : isDisabled ? styles.draggableDisabled : styles.draggableBordered}
               key={item.id}
               type="item"
               data={data}
