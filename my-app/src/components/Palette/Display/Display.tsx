@@ -4,9 +4,7 @@ import styles from './Display.module.scss';
 function Display() {
   return (
     <div className={styles.display}>
-      <div>
-        <p>0</p>
-      </div>
+      <p>0</p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 .switch {
-  @apply w-[243px] h-[38px] custom-switch;
+  @apply absolute top-[40px] right-[55px] w-[243px] h-[38px] custom-switch;
 
   .runtimeButton {
     @apply w-[108px] switch-btn;
