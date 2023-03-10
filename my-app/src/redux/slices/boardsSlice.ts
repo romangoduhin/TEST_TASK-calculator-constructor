@@ -2,10 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Item, Board, InitialStateBoards } from '../types';
-import elementSwapper from '../../helpers/elementSwapper';
-import {
-  isConstructor, isConstructorMode, isDisplay, isRuntimeMode,
-} from '../../helpers/checkers';
+import { isConstructorMode, isDisplay, isRuntimeMode } from '../../helpers/checkers';
 
 const initialState: InitialStateBoards = {
   boards: [
@@ -13,10 +10,18 @@ const initialState: InitialStateBoards = {
       id: 1,
       name: 'palette',
       items: [
-        { id: 1, name: 'display' },
-        { id: 2, name: 'operators' },
-        { id: 3, name: 'numbers' },
-        { id: 4, name: 'equal' },
+        {
+          id: 1, name: 'display',
+        },
+        {
+          id: 2, name: 'operators',
+        },
+        {
+          id: 3, name: 'numbers',
+        },
+        {
+          id: 4, name: 'equal',
+        },
       ],
     },
     {
@@ -27,7 +32,6 @@ const initialState: InitialStateBoards = {
   disabledItems: [],
   currentItem: null,
   currentBoard: null,
-  swappedItem: null,
   mode: 'constructor',
 };
 
@@ -35,53 +39,63 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    setItem: (state, action: PayloadAction<{ boardId: number, item: Item }>) => { // setting item to board
+    setItem: (state, action: PayloadAction<{ boardId:number, item: Item }>) => { // setting item to board
       const { boardId, item } = action.payload;
+      const { currentBoard, currentItem } = state;
+
+      if (boardId === 1 || !currentItem || !currentBoard) return; // case when we try to swap item which is on palette board or current item or current board are not exist
+
+      const currentItemId = currentItem.id;
 
       state.boards = state.boards.map((board) => {
-        const isSearchBoard = board.id === boardId; // check if board is desired
-        const isBoardExistItem = board.items.some((i) => i.id === item.id); // check if board exist setting item
+        const isConstructor = boardId === board.id; // is constructor board
+        const isItemAlreadyExist = board.items.some((i) => i.id === item.id); // is swapped items is already on the constructor board
 
-        if (isSearchBoard && !isBoardExistItem) {
-          const newBoard = { ...board };
+        const newBoard = { ...board };
 
-          if (isDisplay(item)) { // setting only Display as first element
-            newBoard.items = [item, ...newBoard.items];
-          } else {
-            newBoard.items = [...newBoard.items, item];
-          }
+        if (!isConstructor && isItemAlreadyExist) return board; // case when mapped board is not constructor and item already exist on it
 
+        if (isConstructor && isItemAlreadyExist) { // case when item is already exist on constructor board
+          newBoard.items = newBoard.items.filter((el) => el.id !== currentItemId);
+        }
+
+        if (isDisplay(item)) { // case when we swap something on display
+          newBoard.items = [...newBoard.items.slice(0, 1), currentItem, ...newBoard.items.slice(1)];
+
+          state.disabledItems = [...state.disabledItems, currentItemId]; // disable item
           return newBoard;
         }
-        return board;
+
+        if (isDisplay(currentItem)) { // when we move display from palette to canvas
+          newBoard.items = [currentItem, ...board.items.filter((el) => el.id !== currentItemId)];
+
+          state.disabledItems = [...state.disabledItems, currentItemId]; // disable item
+          return newBoard;
+        }
+
+        const itemIndex = currentBoard.items.findIndex((el) => el.id === item.id);
+
+        newBoard.items = [...newBoard.items.slice(0, itemIndex), currentItem, ...newBoard.items.slice(itemIndex)]; // case when we swap items
+
+        state.disabledItems = [...state.disabledItems, currentItemId]; // disable item
+
+        return newBoard;
       });
     },
-    removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => { // remove item from board
-      const { boardId, itemId } = action.payload;
+    setItemToCanvas: (state, action: PayloadAction<Item>) => {
+      const item = action.payload;
+      const currentBoard = { ...state.boards[1] };
 
       state.boards = state.boards.map((board) => {
-        const isSearchBoard = board.id === boardId; // check if board is desired
+        const isCanvas = board.id === currentBoard.id; // is canvas board
+        const isItemAlreadyExist = board.items.some((i) => i.id === item.id); // is adding item is already on the canvas
 
-        if (isSearchBoard) {
-          const newBoard = { ...board };
-          newBoard.items = newBoard.items.filter((item) => item.id !== itemId); // removing the current item
-          return newBoard;
-        }
+        if (!isCanvas || isItemAlreadyExist) return board; // case when item is already on the canvas or mapped board is not canvas
+
+        board.items = isDisplay(item) ? [item, ...currentBoard.items] : [...currentBoard.items, item]; // case when if adding item is Display add to begin, if not push it to the end
+
         return board;
       });
-    },
-    disableItem: (state, action: PayloadAction<number>) => { // set item id to array with disabled items
-      const itemId = action.payload;
-      const isExistItem = state.disabledItems.some((i) => i === itemId); // check if array already has item
-
-      if (!isExistItem) {
-        state.disabledItems = [...state.disabledItems, itemId]; // push item to the array
-      }
-    },
-    enableItem: (state, action: PayloadAction<number>) => { // remove item from array with disabled items
-      const itemId = action.payload;
-
-      state.disabledItems = state.disabledItems.filter((id) => id !== itemId);
     },
     setCurrentItem: (state, action: PayloadAction<Item>) => { // setting current item
       const item = action.payload;
@@ -93,39 +107,37 @@ export const boardsSlice = createSlice({
 
       state.currentBoard = board;
     },
-    setSwappedItem: (state, action: PayloadAction<Item>) => { // setting item that will swap with current item
-      const item = action.payload;
+    removeItem: (state, action: PayloadAction<{ boardId: number, itemId: number }>) => { // remove item from board
+      const { boardId, itemId } = action.payload;
 
-      state.swappedItem = item;
+      if (boardId === 1) return; // case when we try to remove item from not a constructor board
+
+      state.boards = state.boards.map((board) => {
+        const isConstructor = board.id === boardId; //  is constructor board
+
+        if (isConstructor) {
+          const newBoard = { ...board };
+
+          newBoard.items = newBoard.items.filter((item) => item.id !== itemId); // removing the item
+          return newBoard;
+        }
+        return board;
+      });
     },
-    swapItem: (state) => { // swap the current and swapped items
-      const { currentItem, swappedItem, currentBoard } = state;
-      const isItemsExist = currentItem && swappedItem; // check if items exist
-      const isItemsNotDisplay = isItemsExist && ((!isDisplay(currentItem)) && (!isDisplay(swappedItem))); // check if one of the item is Display, because ww cant swap Display part
-      const isBoardConstructor = currentBoard && isConstructor(currentBoard); // check if the board is constructor board
+    disableItem: (state, action: PayloadAction<number>) => { // set item id to array with disabled items
+      const itemId = action.payload;
+      const isItemAlreadyExist = state.disabledItems.some((i) => i === itemId); // check if array already has item
 
-      if (isBoardConstructor && isItemsNotDisplay && isItemsExist) {
-        state.boards = state.boards.map((board) => {
-          if (isConstructor(board)) {
-            const newBoard = { ...board };
-
-            const swappedItemIndex = board.items.findIndex((i) => i.id === swappedItem.id);
-            const currentItemIndex = board.items.findIndex((i) => i.id === currentItem.id);
-
-            const isIndexesCorrect = (swappedItemIndex >= 0 && currentItemIndex >= 0); // check if indexes are correct, because it can be -1 if we finish onDragEnd on non Droppable area
-            const isIndexesEqual = swappedItemIndex === currentItemIndex; // check if indexes equal each other
-
-            if (!isIndexesEqual && isIndexesCorrect) {
-              elementSwapper(newBoard.items, swappedItemIndex, currentItemIndex); // swap current item and swapped item
-            }
-
-            return newBoard;
-          }
-          return board;
-        });
+      if (!isItemAlreadyExist) {
+        state.disabledItems = [...state.disabledItems, itemId]; // add item to the end of array
       }
     },
-    switchMode: (state) => {
+    enableItem: (state, action: PayloadAction<number>) => { // remove item from array with disabled items
+      const itemId = action.payload;
+
+      state.disabledItems = state.disabledItems.filter((id) => id !== itemId);
+    },
+    switchMode: (state) => { // switch mode
       const { mode } = state;
 
       if (isRuntimeMode(mode)) {
@@ -139,13 +151,12 @@ export const boardsSlice = createSlice({
 
 export const {
   setItem,
+  setItemToCanvas,
   removeItem,
   disableItem,
   enableItem,
   setCurrentItem,
   setCurrentBoard,
-  setSwappedItem,
-  swapItem,
   switchMode,
 } = boardsSlice.actions;
 export default boardsSlice.reducer;

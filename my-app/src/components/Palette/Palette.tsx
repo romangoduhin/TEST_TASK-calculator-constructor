@@ -1,5 +1,5 @@
-/* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+/* eslint-disable no-nested-ternary, max-len */
+import React, { useState, DragEvent } from 'react';
 // @ts-ignore
 import { Draggable, Droppable } from 'react-drag-and-drop';
 import styles from './Palette.module.scss';
@@ -7,7 +7,7 @@ import { IComponents, IProps } from './Palette.types';
 import { parse, stringify } from '../../helpers/jsonMethods';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
-  removeItem, enableItem, setCurrentItem, swapItem, setSwappedItem, setCurrentBoard,
+  removeItem, enableItem, setCurrentItem, setItem, setCurrentBoard,
 } from '../../redux/slices/boardsSlice';
 import Display from './Display/Display';
 import Operators from './Operators/Operators';
@@ -57,26 +57,22 @@ function Palette({ items, board, disabledItems }: IProps) {
 
       if (parsedData) {
         dispatch(setCurrentItem(parsedData));
-      }
-    }
-  }
-
-  function handleDragEnter(data: string) {
-    if (!isCalculatingEnable) {
-      const parsedData = parse(data);
-
-      if (board && parsedData) {
-        dispatch(setSwappedItem(parsedData));
         dispatch(setCurrentBoard(board));
       }
     }
   }
 
-  function handleDragEnd() {
-    if (!isCalculatingEnable) {
-      switchLineVisibility(false);
+  function handleDrop(e: DragEvent<HTMLDivElement>, data: string) {
+    e.stopPropagation();
 
-      dispatch(swapItem());
+    switchLineVisibility(false);
+
+    if (!isCalculatingEnable) {
+      const parsedData = parse(data);
+
+      if (board && parsedData) {
+        dispatch(setItem({ boardId: board.id, item: parsedData }));
+      }
     }
   }
 
@@ -89,15 +85,14 @@ function Palette({ items, board, disabledItems }: IProps) {
 
         {items.map((item) => {
           const data = stringify(item);
-          const isDisabled = disabledItems && disabledItems.includes(item.id);
+          const isDisabled = (disabledItems && disabledItems.includes(item.id)) || isCalculatingEnable;
           const isConstructorBoard = isConstructor(board);
           const isDisplayPart = isDisplay(item);
 
           return (
             <Draggable
               id={item.id}
-              enabled={!isCalculatingEnable
-                  || (!(isConstructorBoard && isDisplayPart) && !isDisabled)}
+              enabled={!isDisabled}
               className={isConstructorBoard
                 ? isDisplayPart ? styles.draggableNotAllowed : styles.draggable
                 : isDisabled ? styles.draggableDisabled : styles.draggableBordered}
@@ -105,8 +100,7 @@ function Palette({ items, board, disabledItems }: IProps) {
               type="item"
               data={data}
               onDragStart={() => handleDragStart(data)}
-              onDragEnter={() => handleDragEnter(data)}
-              onDragEnd={() => handleDragEnd()}
+              onDrop={(e: DragEvent<HTMLDivElement>) => handleDrop(e, data)}
               onDoubleClick={() => handleDoubleClick(item.id)}
             >
               <div className={isCalculatingEnable ? styles.part : `${styles.part} ${styles.disabled}`}>{constructorParts[item.name as keyof IComponents]}</div>
