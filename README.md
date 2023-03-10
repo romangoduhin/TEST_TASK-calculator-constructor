@@ -16,8 +16,10 @@
 - you can't use the calculator logic when the mode on Switch panel is "Constructor"
 - you can't add same part twice 
 2) If you want to calculate something, turn switch on "Runtime" mode and use it :)
+- you can remove value by click on display
 ### EXCEPTIONS: 
-- you can swap the parts between each other on "Runtime" mode
+- operators are not displaying, but they are highlighting 
+- you can't swap the parts here on "Runtime" mode
 - when you switch mode back to "Constuctor" your dispay will clean up
 
 # What I used for it?
