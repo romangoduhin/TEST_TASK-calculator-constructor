@@ -18,6 +18,7 @@
 2) If you want to calculate something, turn switch on "Runtime" mode and use it :)
 - you can remove value by click on display
 ### EXCEPTIONS: 
+- result cleaning after 1 sec
 - operators are not displaying, but they are highlighting 
 - you can't swap the parts here on "Runtime" mode
 - when you switch mode back to "Constuctor" your dispay will clean up
