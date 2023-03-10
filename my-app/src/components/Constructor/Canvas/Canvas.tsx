@@ -5,7 +5,7 @@ import AddIconSvg from '../../../assets/addIcon.svg';
 import styles from './Canvas.module.scss';
 import { IProps } from './Canvas.types';
 import { useAppDispatch } from '../../../redux/hooks';
-import { disableItem, setItem } from '../../../redux/slices/boardsSlice';
+import { disableItem, setItemToCanvas } from '../../../redux/slices/boardsSlice';
 import { parse } from '../../../helpers/jsonMethods';
 import Palette from '../../Palette/Palette';
 
@@ -19,7 +19,7 @@ function Canvas({ items, board }: IProps) {
     const parsedData = parse(data);
 
     if (parsedData) {
-      dispatch(setItem({ boardId: 2, item: parsedData }));
+      dispatch(setItemToCanvas(parsedData));
       dispatch(disableItem(parsedData.id));
     }
   }

@@ -1,4 +1,4 @@
-export interface Item { id: number, name: string }
+export interface Item { id: number, name: string}
 
 export type Items = Array<Item> | [];
 export type Mode = 'constructor' | 'runtime';
@@ -14,7 +14,6 @@ export interface InitialStateBoards {
   disabledItems: Array<number> | [],
   currentItem: Item | null;
   currentBoard: Board | null;
-  swappedItem: Item | null;
   mode: Mode,
 }
 
